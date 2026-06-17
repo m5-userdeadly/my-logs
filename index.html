@@ -272,7 +272,7 @@
     </header>
 
     <div id="prices-page" class="page active">
-        <span class="source-link">Source: Consumer Council HK (Live API Feed)</span>
+        <span class="source-link">Source: Consumer Council HK (Live API Feed via Sheets)</span>
         
         <div class="section-title">STANDARD PETROL</div>
         <div id="standard-petrol-container">
@@ -331,8 +331,8 @@
     </div>
 
     <script>
-        // CONFIGURATION: Web app URL
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVEkOqz67hUWG6-ZndWiNS9OMCm_xDoyL5tsynVHdrAyYdlt_WNVY_g_O1aHpZk3KqLw/exec';
+        // CONFIGURATION: PASTE YOUR LONG GOOGLE WEB APP LINK INSIDE THE QUOTES BELOW
+        const GOOGLE_SCRIPT_URL = 'PASTE_YOUR_WEB_APP_URL_HERE';
         
         let userRecords = { refuels: [], expenses: [] };
         let donutChartInstance = null;
@@ -342,7 +342,6 @@
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             tabElement.classList.add('active');
-            if(pageId === 'logbook-page') { fetchLiveSheetsData(); }
         }
 
         function openForm(id) { document.getElementById(id).style.display = 'flex'; }
@@ -356,43 +355,53 @@
             document.querySelectorAll('.auto-date').forEach(input => input.value = `${year}-${month}-${day}`);
             
             renderCalendar(today, {}, {});
-            fetchLiveFuelPrices();
+            fetchAllDataFromSheets();
         });
 
-        // FETCH LIVE HK FUEL PRICES
-        function fetchLiveFuelPrices() {
-            const apiURL = "https://cors-anywhere.herokuapp.com/https://oil-price.consumer.org.hk/assets/opendata/pump_price.json";
-
-            fetch(apiURL)
+        // FETCH ALL DATA (LOGS + LIVE PRICES) FROM GOOGLE IN ONE GO
+        function fetchAllDataFromSheets() {
+            fetch(GOOGLE_SCRIPT_URL)
             .then(res => res.json())
             .then(data => {
-                const standardContainer = document.getElementById('standard-petrol-container');
-                const premiumContainer = document.getElementById('premium-petrol-container');
+                userRecords = data;
                 
-                standardContainer.innerHTML = '';
-                premiumContainer.innerHTML = '';
-
-                data.forEach(oilCompany => {
-                    const companyName = oilCompany.company_name_en.toUpperCase();
-                    
-                    if (oilCompany.unleaded) {
-                        const pump = parseFloat(oilCompany.unleaded.pump_price).toFixed(2);
-                        const discount = parseFloat(oilCompany.unleaded.walkin_discount || 0).toFixed(2);
-                        const net = (pump - discount).toFixed(2);
-                        standardContainer.innerHTML += createPriceCard(companyName, pump, net, discount);
-                    }
-
-                    if (oilCompany.premium_unleaded) {
-                        const pump = parseFloat(oilCompany.premium_unleaded.pump_price).toFixed(2);
-                        const discount = parseFloat(oilCompany.premium_unleaded.walkin_discount || 0).toFixed(2);
-                        const net = (pump - discount).toFixed(2);
-                        premiumContainer.innerHTML += createPriceCard(companyName + " PREMIUM", pump, net, discount);
-                    }
-                });
+                // 1. Process Live Petrol Prices
+                if (data.livePrices) {
+                    renderLivePrices(data.livePrices);
+                }
+                
+                // 2. Process Logs & Charts
+                processAndRenderData();
             })
             .catch(err => {
-                console.error("Error loading live prices:", err);
-                document.querySelectorAll('.no-data-msg').forEach(el => el.innerText = "Unable to load live prices. Please try again later.");
+                console.error("Error fetching data from backend:", err);
+                document.querySelectorAll('.no-data-msg').forEach(el => el.innerText = "Error loading app data.");
+            });
+        }
+
+        function renderLivePrices(priceData) {
+            const standardContainer = document.getElementById('standard-petrol-container');
+            const premiumContainer = document.getElementById('premium-petrol-container');
+            
+            standardContainer.innerHTML = '';
+            premiumContainer.innerHTML = '';
+
+            priceData.forEach(oilCompany => {
+                const companyName = oilCompany.company_name_en.toUpperCase();
+                
+                if (oilCompany.unleaded) {
+                    const pump = parseFloat(oilCompany.unleaded.pump_price).toFixed(2);
+                    const discount = parseFloat(oilCompany.unleaded.walkin_discount || 0).toFixed(2);
+                    const net = (pump - discount).toFixed(2);
+                    standardContainer.innerHTML += createPriceCard(companyName, pump, net, discount);
+                }
+
+                if (oilCompany.premium_unleaded) {
+                    const pump = parseFloat(oilCompany.premium_unleaded.pump_price).toFixed(2);
+                    const discount = parseFloat(oilCompany.premium_unleaded.walkin_discount || 0).toFixed(2);
+                    const net = (pump - discount).toFixed(2);
+                    premiumContainer.innerHTML += createPriceCard(companyName + " PREMIUM", pump, net, discount);
+                }
             });
         }
 
@@ -409,16 +418,6 @@
                     </div>
                 </div>
             `;
-        }
-
-        function fetchLiveSheetsData() {
-            fetch(GOOGLE_SCRIPT_URL)
-            .then(res => res.json())
-            .then(data => {
-                userRecords = data;
-                processAndRenderData();
-            })
-            .catch(err => console.error("Error fetching sheet records:", err));
         }
 
         function processAndRenderData() {
@@ -526,7 +525,7 @@
                 form.reset();
                 form.querySelector('.auto-date').value = new Date().toISOString().split('T')[0];
                 closeForm(targetSheetName === 'Refuel_Log' ? 'fuel-form' : 'expense-form');
-                fetchLiveSheetsData();
+                fetchAllDataFromSheets(); // Instantly refresh everything
             })
             .catch(err => alert('Error sending to sheet: ' + err));
         }
