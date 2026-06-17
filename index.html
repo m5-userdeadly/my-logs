@@ -331,7 +331,7 @@
     </div>
 
     <script>
-        // CONFIGURATION: Web App URL
+// CONFIGURATION: Web App URL
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVEkOqz67hUWG6-ZndWiNS9OMCm_xDoyL5tsynVHdrAyYdlt_WNVY_g_O1aHpZk3KqLw/exec';
         
         let userRecords = { refuels: [], expenses: [] };
@@ -358,89 +358,61 @@
             fetchAllDataFromSheets();
         });
 
-        // FETCH ALL DATA (LOGS + LIVE PRICES) FROM GOOGLE IN ONE GO
         function fetchAllDataFromSheets() {
             fetch(GOOGLE_SCRIPT_URL)
             .then(res => res.json())
             .then(data => {
                 userRecords = data;
                 
-                // 1. Process Live Petrol Prices
                 if (data.livePrices) {
                     renderLivePrices(data.livePrices);
+                } else {
+                    document.querySelectorAll('.no-data-msg').forEach(el => el.innerText = "Petrol prices temporarily unavailable.");
                 }
                 
-                // 2. Process Logs & Charts
                 processAndRenderData();
             })
             .catch(err => {
-                console.error("Error fetching data from backend:", err);
-                document.querySelectorAll('.no-data-msg').forEach(el => el.innerText = "Error loading app data.");
+                console.error("Error connecting to sheet backend:", err);
+                document.querySelectorAll('.no-data-msg').forEach(el => el.innerText = "Error loading database components.");
             });
         }
 
         function renderLivePrices(priceData) {
-    const standardContainer = document.getElementById('standard-petrol-container');
-    const premiumContainer = document.getElementById('premium-petrol-container');
-    
-    standardContainer.innerHTML = '';
-    premiumContainer.innerHTML = '';
+            const standardContainer = document.getElementById('standard-petrol-container');
+            const premiumContainer = document.getElementById('premium-petrol-container');
+            
+            standardContainer.innerHTML = '';
+            premiumContainer.innerHTML = '';
 
-    if (!priceData) {
-        standardContainer.innerHTML = '<div class="no-data-msg">No pricing data returned from backend.</div>';
-        premiumContainer.innerHTML = '<div class="no-data-msg">No pricing data returned from backend.</div>';
-        return;
-    }
+            let oilCompanies = [];
+            if (Array.isArray(priceData)) oilCompanies = priceData;
+            else if (priceData.oil_prices) oilCompanies = priceData.oil_prices;
+            else if (priceData.prices) oilCompanies = priceData.prices;
 
-    // Unify data formatting structures from different API mirrors
-    let oilCompanies = [];
-    if (Array.isArray(priceData)) {
-        oilCompanies = priceData;
-    } else if (priceData.oil_prices) {
-        oilCompanies = priceData.oil_prices;
-    } else if (priceData.prices) {
-        oilCompanies = priceData.prices;
-    } else if (priceData.data && Array.isArray(priceData.data)) {
-        oilCompanies = priceData.data;
-    }
+            if (oilCompanies.length === 0) {
+                standardContainer.innerHTML = '<div class="no-data-msg">Price feed structural mismatch.</div>';
+                premiumContainer.innerHTML = '<div class="no-data-msg">Price feed structural mismatch.</div>';
+                return;
+            }
 
-    if (oilCompanies.length === 0) {
-        standardContainer.innerHTML = '<div class="no-data-msg">Price feed formatting structure mismatch.</div>';
-        premiumContainer.innerHTML = '<div class="no-data-msg">Price feed formatting structure mismatch.</div>';
-        return;
-    }
+            oilCompanies.forEach(oilCompany => {
+                const companyName = (oilCompany.company_name_en || oilCompany.company || 'Oil Co').toUpperCase();
+                
+                if (oilCompany.unleaded) {
+                    const pump = parseFloat(oilCompany.unleaded.pump_price || 0).toFixed(2);
+                    const discount = parseFloat(oilCompany.unleaded.walkin_discount || 0).toFixed(2);
+                    const net = (pump - discount).toFixed(2);
+                    standardContainer.innerHTML += createPriceCard(companyName, pump, net, discount);
+                }
 
-    oilCompanies.forEach(oilCompany => {
-        // Safe variable check for English and Chinese company titles
-        const companyName = (oilCompany.company_name_en || oilCompany.company || oilCompany.brand || 'Oil Co').toUpperCase();
-        
-        // Target Standard Petrol fields safely
-        const standardData = oilCompany.unleaded || oilCompany.unleaded_petrol || oilCompany.standard;
-        if (standardData) {
-            const pump = parseFloat(standardData.pump_price || standardData.price || 0).toFixed(2);
-            const discount = parseFloat(standardData.walkin_discount || standardData.discount || 0).toFixed(2);
-            const net = (pump - discount).toFixed(2);
-            standardContainer.innerHTML += createPriceCard(companyName, pump, net, discount);
-        }
-
-        // Target Premium Petrol fields safely
-        const premiumData = oilCompany.premium_unleaded || oilCompany.premium || oilCompany.super;
-        if (premiumData) {
-            const pump = parseFloat(premiumData.pump_price || premiumData.price || 0).toFixed(2);
-            const discount = parseFloat(premiumData.walkin_discount || premiumData.discount || 0).toFixed(2);
-            const net = (pump - discount).toFixed(2);
-            premiumContainer.innerHTML += createPriceCard(companyName + " PREMIUM", pump, net, discount);
-        }
-    });
-
-    // Final safety check if items were skipped during parsing loops
-    if (standardContainer.innerHTML === '') {
-        standardContainer.innerHTML = '<div class="no-data-msg">No standard petrol items extracted.</div>';
-    }
-    if (premiumContainer.innerHTML === '') {
-        premiumContainer.innerHTML = '<div class="no-data-msg">No premium petrol items extracted.</div>';
-    }
-}
+                if (oilCompany.premium_unleaded) {
+                    const pump = parseFloat(oilCompany.premium_unleaded.pump_price || 0).toFixed(2);
+                    const discount = parseFloat(oilCompany.premium_unleaded.walkin_discount || 0).toFixed(2);
+                    const net = (pump - discount).toFixed(2);
+                    premiumContainer.innerHTML += createPriceCard(companyName + " PREMIUM", pump, net, discount);
+                }
+            });
         }
 
         function createPriceCard(name, pump, net, discount) {
@@ -467,26 +439,32 @@
             let categoryTotals = { Fuel: 0, Food: 0, Shopping: 0, Subscription: 0, Misc: 0 };
             let hasCurrentMonthData = false;
 
-            userRecords.refuels.forEach(item => {
-                let d = new Date(item.date);
-                if(d.getMonth() === currentMonth && d.getFullYear() === currentYear) {
-                    fuelDays[d.getDate()] = true;
-                    categoryTotals.Fuel += parseFloat(item.total || 0);
-                    hasCurrentMonthData = true;
-                }
-            });
-
-            userRecords.expenses.forEach(item => {
-                let d = new Date(item.date);
-                if(d.getMonth() === currentMonth && d.getFullYear() === currentYear) {
-                    expDays[d.getDate()] = true;
-                    let cat = item.category || 'Misc';
-                    if(categoryTotals[cat] !== undefined) {
-                        categoryTotals[cat] += parseFloat(item.amount || 0);
+            if (userRecords.refuels && Array.isArray(userRecords.refuels)) {
+                userRecords.refuels.forEach(item => {
+                    if (!item.date) return;
+                    let d = new Date(item.date.replace(/-/g, '/')); // Fix: Resilient date formatting strings
+                    if(!isNaN(d.getTime()) && d.getMonth() === currentMonth && d.getFullYear() === currentYear) {
+                        fuelDays[d.getDate()] = true;
+                        categoryTotals.Fuel += parseFloat(item.total || 0);
+                        hasCurrentMonthData = true;
                     }
-                    hasCurrentMonthData = true;
-                }
-            });
+                });
+            }
+
+            if (userRecords.expenses && Array.isArray(userRecords.expenses)) {
+                userRecords.expenses.forEach(item => {
+                    if (!item.date) return;
+                    let d = new Date(item.date.replace(/-/g, '/')); // Fix: Resilient date formatting strings
+                    if(!isNaN(d.getTime()) && d.getMonth() === currentMonth && d.getFullYear() === currentYear) {
+                        expDays[d.getDate()] = true;
+                        let cat = item.category || 'Misc';
+                        if(categoryTotals[cat] !== undefined) {
+                            categoryTotals[cat] += parseFloat(item.amount || 0);
+                        }
+                        hasCurrentMonthData = true;
+                    }
+                });
+            }
 
             renderCalendar(today, fuelDays, expDays);
             renderCharts(categoryTotals, hasCurrentMonthData);
@@ -563,7 +541,7 @@
                 form.reset();
                 form.querySelector('.auto-date').value = new Date().toISOString().split('T')[0];
                 closeForm(targetSheetName === 'Refuel_Log' ? 'fuel-form' : 'expense-form');
-                fetchAllDataFromSheets(); // Instantly refresh everything
+                fetchAllDataFromSheets();
             })
             .catch(err => alert('Error sending to sheet: ' + err));
         }
