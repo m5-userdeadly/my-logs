@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FuelLog HK</title>
-    <!-- Chart.js for beautiful mobile charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -27,10 +26,9 @@
         body {
             background-color: var(--bg-light);
             color: var(--text-dark);
-            padding-bottom: 70px; /* Space for bottom nav */
+            padding-bottom: 70px;
         }
 
-        /* Top Header */
         header {
             background-color: var(--card-white);
             position: sticky;
@@ -45,7 +43,6 @@
             font-weight: bold;
         }
 
-        /* Navigation Tabs */
         .tabs {
             display: flex;
             border-bottom: 1px solid var(--border-color);
@@ -67,7 +64,6 @@
             border-bottom-color: var(--primary-blue);
         }
 
-        /* Page Content Containers */
         .page {
             display: none;
             padding: 15px;
@@ -79,7 +75,6 @@
             display: block;
         }
 
-        /* Price Cards styling */
         .source-link {
             font-size: 12px;
             color: var(--text-muted);
@@ -132,7 +127,6 @@
             font-weight: bold;
         }
 
-        /* Quick Add Buttons */
         .quick-add-container {
             display: flex;
             gap: 10px;
@@ -152,7 +146,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
 
-        /* Form Overlay */
         .form-popup {
             display: none;
             position: fixed;
@@ -205,7 +198,7 @@
             padding: 12px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            font-size: 16px; /* Prevents iOS auto-zoom on focus */
+            font-size: 16px;
         }
 
         .submit-btn {
@@ -221,7 +214,6 @@
             margin-top: 10px;
         }
 
-        /* Mock Calendar styling */
         .calendar-box {
             background: var(--card-white);
             border: 1px solid var(--border-color);
@@ -245,10 +237,10 @@
             background: #f9f9f9;
         }
         .cal-header { font-weight: bold; background: none; }
-        .has-fuel { background: #e3f2fd; border-left: 3px solid var(--primary-blue); }
-        .has-exp { background: #e8f5e9; border-left: 3px solid #2e7d32; }
+        .has-fuel { background: #e3f2fd; border-left: 2px solid var(--primary-blue); font-weight: bold; }
+        .has-exp { background: #e8f5e9; border-left: 2px solid #2e7d32; font-weight: bold; }
+        .has-both { background: #fff3e0; border-left: 2px solid #f57c00; font-weight: bold; }
 
-        /* Dashboard Visualized Summary Charts */
         .chart-card {
             background: var(--card-white);
             border: 1px solid var(--border-color);
@@ -260,6 +252,12 @@
             font-size: 15px;
             font-weight: bold;
             margin-bottom: 10px;
+        }
+        .no-data-msg {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 20px 0;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -273,239 +271,185 @@
         </div>
     </header>
 
-    <!-- TAB 1: PRICES LANDING PAGE -->
     <div id="prices-page" class="page active">
         <span class="source-link">Source: oil-price.consumer.org.hk/tc</span>
-        
         <div class="section-title">STANDARD PETROL</div>
-        <div class="merchant-card">
-            <div class="merchant-name">SHELL</div>
-            <div class="price-info">
-                <div><span class="price-label">Pump</span> <span class="price-label">Net</span></div>
-                <div class="price-values">$24.08 / $19.08</div>
-            </div>
-        </div>
-        <div class="merchant-card">
-            <div class="merchant-name">CALTEX</div>
-            <div class="price-info">
-                <div><span class="price-label">Pump</span> <span class="price-label">Net</span></div>
-                <div class="price-values">$24.10 / $18.80</div>
-            </div>
-        </div>
-        <div class="merchant-card">
-            <div class="merchant-name">ESSO</div>
-            <div class="price-info">
-                <div><span class="price-label">Pump</span> <span class="price-label">Net</span></div>
-                <div class="price-values">$24.05 / $19.05</div>
-            </div>
-        </div>
+        <div class="merchant-card"><div class="merchant-name">SHELL</div><div class="price-info"><div><span class="price-label">Pump</span><span class="price-label">Net</span></div><div class="price-values">$24.08 / $19.08</div></div></div>
+        <div class="merchant-card"><div class="merchant-name">CALTEX</div><div class="price-info"><div><span class="price-label">Pump</span><span class="price-label">Net</span></div><div class="price-values">$24.10 / $18.80</div></div></div>
+        <div class="merchant-card"><div class="merchant-name">ESSO</div><div class="price-info"><div><span class="price-label">Pump</span><span class="price-label">Net</span></div><div class="price-values">$24.05 / $19.05</div></div></div>
 
         <div class="section-title">PREMIUM PETROL</div>
-        <div class="merchant-card">
-            <div class="merchant-name">SHELL V-POWER</div>
-            <div class="price-info">
-                <div><span class="price-label">Pump</span> <span class="price-label">Net</span></div>
-                <div class="price-values">$25.28 / $20.28</div>
-            </div>
-        </div>
-        <div class="merchant-card">
-            <div class="merchant-name">CALTEX TECHRON</div>
-            <div class="price-info">
-                <div><span class="price-label">Pump</span> <span class="price-label">Net</span></div>
-                <div class="price-values">$25.30 / $20.00</div>
-            </div>
-        </div>
-        <div class="merchant-card">
-            <div class="merchant-name">ESSO SUPREME</div>
-            <div class="price-info">
-                <div><span class="price-label">Pump</span> <span class="price-label">Net</span></div>
-                <div class="price-values">$25.25 / $20.25</div>
-            </div>
-        </div>
+        <div class="merchant-card"><div class="merchant-name">SHELL V-POWER</div><div class="price-info"><div><span class="price-label">Pump</span><span class="price-label">Net</span></div><div class="price-values">$25.28 / $20.28</div></div></div>
+        <div class="merchant-card"><div class="merchant-name">CALTEX TECHRON</div><div class="price-info"><div><span class="price-label">Pump</span><span class="price-label">Net</span></div><div class="price-values">$25.30 / $20.00</div></div></div>
+        <div class="merchant-card"><div class="merchant-name">ESSO SUPREME</div><div class="price-info"><div><span class="price-label">Pump</span><span class="price-label">Net</span></div><div class="price-values">$25.25 / $20.25</div></div></div>
     </div>
 
-    <!-- TAB 2: UNIFIED LOGBOOK & SUMMARY -->
     <div id="logbook-page" class="page">
         <div class="quick-add-container">
             <div class="quick-btn" onclick="openForm('fuel-form')">⛽ ADD REFUEL</div>
             <div class="quick-btn" onclick="openForm('expense-form')">🛒 ADD EXPENSE</div>
         </div>
 
-        <!-- Dynamic Local Month Calendar Display -->
         <div class="calendar-box">
             <h3 id="calendar-month-year">Month Year</h3>
-            <div class="calendar-grid" id="calendar-grid-days">
-                <!-- Days will auto inject here -->
-            </div>
+            <div class="calendar-grid" id="calendar-grid-days"></div>
         </div>
 
-        <!-- Visualized Reports -->
         <div class="chart-card">
             <div class="chart-title">Spending Breakdown This Month</div>
-            <canvas id="donutChart" width="100" height="100"></canvas>
-        </div>
-
-        <div class="chart-card">
-            <div class="chart-title">Fuel Spent vs Other Expenses</div>
-            <canvas id="barChart" width="100" height="60"></canvas>
+            <div id="donut-container">
+                <canvas id="donutChart" width="100" height="100"></canvas>
+            </div>
         </div>
     </div>
 
-    <!-- REFUEL FORM POPUP -->
     <div id="fuel-form" class="form-popup">
         <div class="form-content">
-            <div class="form-header">
-                <span>Log New Fuel</span>
-                <span class="close-form" onclick="closeForm('fuel-form')">✕</span>
-            </div>
+            <div class="form-header"><span>Log New Fuel</span><span class="close-form" onclick="closeForm('fuel-form')">✕</span></div>
             <form id="refuelForm" onsubmit="submitForm(event, 'Refuel_Log')">
-                <div class="form-group">
-                    <label>Date</label>
-                    <input type="date" class="auto-date" required>
-                </div>
-                <div class="form-group">
-                    <label>Litres (L)</label>
-                    <input type="number" step="0.01" placeholder="e.g. 45.5" required id="fuel-litres">
-                </div>
-                <div class="form-group">
-                    <label>Total Paid ($HKD)</label>
-                    <input type="number" step="0.1" placeholder="e.g. 850" required id="fuel-cost">
-                </div>
-                <div class="form-group">
-                    <label>Station</label>
-                    <select id="fuel-station">
-                        <option value="Shell">Shell</option>
-                        <option value="Caltex">Caltex</option>
-                        <option value="Esso">Esso</option>
-                        <option value="Sinopec">Sinopec</option>
-                    </select>
-                </div>
+                <div class="form-group"><label>Date</label><input type="date" class="auto-date" required></div>
+                <div class="form-group"><label>Litres (L)</label><input type="number" step="0.01" required id="fuel-litres"></div>
+                <div class="form-group"><label>Total Paid ($HKD)</label><input type="number" step="0.1" required id="fuel-cost"></div>
+                <div class="form-group"><label>Station</label><select id="fuel-station"><option value="Shell">Shell</option><option value="Caltex">Caltex</option><option value="Esso">Esso</option><option value="Sinopec">Sinopec</option></select></div>
                 <button type="submit" class="submit-btn">SAVE ENTRY</button>
             </form>
         </div>
     </div>
 
-    <!-- EXPENSE FORM POPUP -->
     <div id="expense-form" class="form-popup">
         <div class="form-content">
-            <div class="form-header">
-                <span>Quick Expense Log</span>
-                <span class="close-form" onclick="closeForm('expense-form')">✕</span>
-            </div>
+            <div class="form-header"><span>Quick Expense Log</span><span class="close-form" onclick="closeForm('expense-form')">✕</span></div>
             <form id="expenseForm" onsubmit="submitForm(event, 'Expense_Log')">
-                <div class="form-group">
-                    <label>Date</label>
-                    <input type="date" class="auto-date" required>
-                </div>
-                <div class="form-group">
-                    <label>Amount ($HKD)</label>
-                    <input type="number" step="0.1" placeholder="e.g. 68" required id="exp-amount">
-                </div>
-                <div class="form-group">
-                    <label>Item Name</label>
-                    <input type="text" placeholder="e.g. Lunch" required id="exp-name">
-                </div>
-                <div class="form-group">
-                    <label>Category</label>
-                    <select id="exp-category">
-                        <option value="Food">Food</option>
-                        <option value="Shopping">Shopping</option>
-                        <option value="Subscription">Subscription</option>
-                        <option value="Misc">Misc</option>
-                    </select>
-                </div>
+                <div class="form-group"><label>Date</label><input type="date" class="auto-date" required></div>
+                <div class="form-group"><label>Amount ($HKD)</label><input type="number" step="0.1" required id="exp-amount"></div>
+                <div class="form-group"><label>Item Name</label><input type="text" required id="exp-name"></div>
+                <div class="form-group"><label>Category</label><select id="exp-category"><option value="Food">Food</option><option value="Shopping">Shopping</option><option value="Subscription">Subscription</option><option value="Misc">Misc</option></select></div>
                 <button type="submit" class="submit-btn">ADD ENTRY</button>
             </form>
         </div>
     </div>
 
     <script>
-        // BACKEND LINK CONFIGURATION
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVEkOqz67hUWG6-ZndWiNS9OMCm_xDoyL5tsynVHdrAyYdlt_WNVY_g_O1aHpZk3KqLw/exec';
+        let userRecords = { refuels: [], expenses: [] };
+        let donutChartInstance = null;
 
-        // Tab Switching Logic
         function switchTab(pageId, tabElement) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             tabElement.classList.add('active');
+            if(pageId === 'logbook-page') { fetchLiveSheetsData(); }
         }
 
-        // Form Overlays Logic
-        function openForm(id) {
-            document.getElementById(id).style.display = 'flex';
-        }
-        function closeForm(id) {
-            document.getElementById(id).style.display = 'none';
-        }
+        function openForm(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeForm(id) { document.getElementById(id).style.display = 'none'; }
 
-        // AUTO-FILL CURRENT LOCAL DATE ON LOAD
         window.addEventListener('DOMContentLoaded', () => {
             const today = new Date();
             const year = today.getFullYear();
             const month = String(today.getMonth() + 1).padStart(2, '0');
             const day = String(today.getDate()).padStart(2, '0');
-            const formattedDate = `${year}-${month}-${day}`;
+            document.querySelectorAll('.auto-date').forEach(input => input.value = `${year}-${month}-${day}`);
             
-            // Inject into all date fields
-            document.querySelectorAll('.auto-date').forEach(input => {
-                input.value = formattedDate;
-            });
-
-            // Build out Visualized Elements
-            renderCalendar(today);
-            initCharts();
+            // Build blank slate calendar first
+            renderCalendar(today, {}, {});
         });
 
-        // Dynamic Calendar Builder based on local system date
-        function renderCalendar(dateObj) {
+        function fetchLiveSheetsData() {
+            fetch(GOOGLE_SCRIPT_URL)
+            .then(res => res.json())
+            .then(data => {
+                userRecords = data;
+                processAndRenderData();
+            })
+            .catch(err => console.error("Error fetching sheet records:", err));
+        }
+
+        function processAndRenderData() {
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+
+            let fuelDays = {}, expDays = {};
+            let categoryTotals = { Fuel: 0, Food: 0, Shopping: 0, Subscription: 0, Misc: 0 };
+            let hasCurrentMonthData = false;
+
+            // Process Refuels
+            userRecords.refuels.forEach(item => {
+                let d = new Date(item.date);
+                if(d.getMonth() === currentMonth && d.getFullYear() === currentYear) {
+                    fuelDays[d.getDate()] = true;
+                    categoryTotals.Fuel += parseFloat(item.total || 0);
+                    hasCurrentMonthData = true;
+                }
+            });
+
+            // Process Expenses
+            userRecords.expenses.forEach(item => {
+                let d = new Date(item.date);
+                if(d.getMonth() === currentMonth && d.getFullYear() === currentYear) {
+                    expDays[d.getDate()] = true;
+                    let cat = item.category || 'Misc';
+                    if(categoryTotals[cat] !== undefined) {
+                        categoryTotals[cat] += parseFloat(item.amount || 0);
+                    }
+                    hasCurrentMonthData = true;
+                }
+            });
+
+            renderCalendar(today, fuelDays, expDays);
+            renderCharts(categoryTotals, hasCurrentMonthData);
+        }
+
+        function renderCalendar(dateObj, fuelDays, expDays) {
             const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             document.getElementById('calendar-month-year').innerText = `${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
             
             const grid = document.getElementById('calendar-grid-days');
-            const weekdays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-            weekdays.forEach(w => grid.innerHTML += `<div class="cal-day cal-header">${w}</div>`);
+            grid.innerHTML = '';
+            
+            ['S', 'M', 'T', 'W', 'T', 'F', 'S'].forEach(w => grid.innerHTML += `<div class="cal-day cal-header">${w}</div>`);
 
             const firstDayIndex = new Date(dateObj.getFullYear(), dateObj.getMonth(), 1).getDay();
             const totalDays = new Date(dateObj.getFullYear(), dateObj.getMonth() + 1, 0).getDate();
 
-            // Blanks for alignment
             for(let i=0; i<firstDayIndex; i++) { grid.innerHTML += `<div class="cal-day" style="background:none"></div>`; }
             
-            // Populating active days with dummy activity markers for design
             for(let day=1; day<=totalDays; day++) {
                 let statusClass = "";
-                if(day === 6 || day === 15) statusClass = "has-fuel";
-                if(day === 3 || day === 12 || day === 21) statusClass = "has-exp";
+                if(fuelDays[day] && expDays[day]) statusClass = "has-both";
+                else if(fuelDays[day]) statusClass = "has-fuel";
+                else if(expDays[day]) statusClass = "has-exp";
+                
                 grid.innerHTML += `<div class="cal-day ${statusClass}">${day}</div>`;
             }
         }
 
-        // Visualized Mock Summaries (Charts Initialization)
-        function initCharts() {
-            new Chart(document.getElementById('donutChart'), {
+        function renderCharts(totals, hasData) {
+            if(donutChartInstance) { donutChartInstance.destroy(); }
+            const container = document.getElementById('donut-container');
+            
+            if(!hasData) {
+                container.innerHTML = '<div class="no-data-msg">No logs recorded yet for this month. Your breakdown chart will show up here as soon as you add data!</div>';
+                return;
+            }
+
+            container.innerHTML = '<canvas id="donutChart" width="100" height="100"></canvas>';
+            
+            donutChartInstance = new Chart(document.getElementById('donutChart'), {
                 type: 'doughnut',
                 data: {
-                    labels: ['Fuel', 'Food', 'Shopping', 'Sub'],
-                    datasets: [{ data: [55, 25, 15, 5], backgroundColor: ['#0066b2', '#2e7d32', '#f57c00', '#7b1fa2'] }]
+                    labels: ['Fuel', 'Food', 'Shopping', 'Sub', 'Misc'],
+                    datasets: [{
+                        data: [totals.Fuel, totals.Food, totals.Shopping, totals.Subscription, totals.Misc],
+                        backgroundColor: ['#0066b2', '#2e7d32', '#f57c00', '#7b1fa2', '#666666']
+                    }]
                 },
                 options: { responsive: true }
             });
-
-            new Chart(document.getElementById('barChart'), {
-                type: 'bar',
-                data: {
-                    labels: ['Wk 1', 'Wk 2', 'Wk 3', 'Wk 4'],
-                    datasets: [
-                        { label: 'Fuel', data: [400, 0, 450, 0], backgroundColor: '#0066b2' },
-                        { label: 'Other', data: [150, 320, 180, 210], backgroundColor: '#2e7d32' }
-                    ]
-                },
-                options: { responsive: true, scales: { y: { beginAtZero: true } } }
-            });
         }
 
-        // SENDING THE ENTRY TO GOOGLE SHEETS
         function submitForm(event, targetSheetName) {
             event.preventDefault();
             const form = event.target;
@@ -513,46 +457,25 @@
             let rowData = [];
 
             if (targetSheetName === 'Refuel_Log') {
-                rowData = [
-                    dateValue,
-                    document.getElementById('fuel-litres').value,
-                    document.getElementById('fuel-cost').value,
-                    document.getElementById('fuel-station').value
-                ];
+                rowData = [dateValue, document.getElementById('fuel-litres').value, document.getElementById('fuel-cost').value, document.getElementById('fuel-station').value];
             } else {
-                rowData = [
-                    dateValue,
-                    document.getElementById('exp-amount').value,
-                    document.getElementById('exp-name').value,
-                    document.getElementById('exp-category').value
-                ];
+                rowData = [dateValue, document.getElementById('exp-amount').value, document.getElementById('exp-name').value, document.getElementById('exp-category').value];
             }
 
-            // Assembly network package
-            const payload = {
-                targetSheet: targetSheetName,
-                rowData: rowData
-            };
-
-            // Post request to Google Sheets
             fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors', // Essential bypass for cross-origin tracking
+                mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                body: JSON.stringify({ targetSheet: targetSheetName, rowData: rowData })
             })
             .then(() => {
                 alert('Success! Logged to Google Sheets.');
                 form.reset();
-                // Re-assign default today's date
-                const todayStr = new Date().toISOString().split('T')[0];
-                form.querySelector('.auto-date').value = todayStr;
-                // Close active overlay popup windows
+                form.querySelector('.auto-date').value = new Date().toISOString().split('T')[0];
                 closeForm(targetSheetName === 'Refuel_Log' ? 'fuel-form' : 'expense-form');
+                fetchLiveSheetsData(); // Instantly refresh layout views
             })
-            .catch(err => {
-                alert('Error sending to sheet: ' + err);
-            });
+            .catch(err => alert('Error sending to sheet: ' + err));
         }
     </script>
 </body>
