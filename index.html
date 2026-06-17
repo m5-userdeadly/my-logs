@@ -26,7 +26,7 @@
         body {
             background-color: var(--bg-light);
             color: var(--text-dark);
-            padding-bottom: 70px;
+            padding-bottom: 40px;
         }
 
         header {
@@ -75,107 +75,84 @@
             display: block;
         }
 
-        .source-link {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .quick-add-container {
-            display: flex;
-            gap: 10px;
+        /* Inline Integrated Form Layout */
+        .inline-form-card {
+            background: var(--card-white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
             margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
 
-        .quick-btn {
-            flex: 1;
-            background: var(--card-white);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 12px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-
-        .form-popup {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: flex-end;
-        }
-
-        .form-content {
-            background: var(--card-white);
-            width: 100%;
-            border-radius: 16px 16px 0 0;
-            padding: 20px;
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-
-        .form-header {
-            display: flex;
-            justify-content: space-between;
-            font-size: 18px;
+        .inline-form-card h3 {
+            font-size: 16px;
             font-weight: bold;
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
+            margin-bottom: 12px;
+            color: var(--text-dark);
         }
 
-        .close-form {
-            cursor: pointer;
+        .form-row-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .form-field-box {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-field-box label {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
             color: var(--text-muted);
         }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .form-group input, .form-group select {
+        .form-field-box input, .form-field-box select {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            background: #fafafa;
         }
 
-        .submit-btn {
+        .form-field-box input:focus, .form-field-box select:focus {
+            background: #ffffff;
+            border-color: var(--primary-blue);
+            outline: none;
+        }
+
+        .unified-submit-btn {
             background: var(--primary-blue);
             color: white;
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 6px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 5px;
+            transition: background 0.2s;
         }
 
+        .unified-submit-btn:active {
+            background: #005292;
+        }
+
+        /* Calendar Box Elements */
         .calendar-box {
             background: var(--card-white);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 15px;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
 
         .calendar-grid {
@@ -186,27 +163,81 @@
         }
 
         .cal-day {
-            padding: 8px 0;
+            padding: 10px 0;
             font-size: 12px;
-            border-radius: 4px;
+            border-radius: 6px;
             background: #f9f9f9;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.1s;
         }
-        .cal-header { font-weight: bold; background: none; }
-        .has-fuel { background: #e3f2fd; border-left: 2px solid var(--primary-blue); font-weight: bold; }
-        .has-exp { background: #e8f5e9; border-left: 2px solid #2e7d32; font-weight: bold; }
-        .has-both { background: #fff3e0; border-left: 2px solid #f57c00; font-weight: bold; }
 
+        .cal-day:not(.cal-header):active {
+            transform: scale(0.92);
+        }
+
+        .cal-header { font-weight: bold; background: none; cursor: default; }
+        .has-fuel { background: #e3f2fd; border-bottom: 3px solid var(--primary-blue); font-weight: bold; }
+        .has-exp { background: #e8f5e9; border-bottom: 3px solid #2e7d32; font-weight: bold; }
+        .has-both { background: #fff3e0; border-bottom: 3px solid #f57c00; font-weight: bold; }
+        
+        .cal-day.selected-date-focus {
+            outline: 2px solid #333333;
+            outline-offset: -1px;
+        }
+
+        /* Day Detail Inspector Box */
+        .inspector-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .inspector-title {
+            font-size: 14px;
+            font-weight: bold;
+            border-bottom: 1px solid #eeeeee;
+            padding-bottom: 6px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .inspector-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 6px 0;
+            border-bottom: 1px dashed #f5f5f5;
+        }
+        .inspector-item:last-child { border: none; }
+
+        /* Chart Components */
         .chart-card {
             background: var(--card-white);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 15px;
             margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
         .chart-title {
             font-size: 15px;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .total-badge {
+            background: #e3f2fd;
+            color: var(--primary-blue);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 14px;
         }
         .no-data-msg {
             text-align: center;
@@ -226,6 +257,7 @@
         </div>
     </header>
 
+    <!-- PRICES TAB -->
     <div id="prices-page" class="page active">
         <div style="background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 10px;">
             <div style="font-size: 40px; margin-bottom: 10px;">⛽</div>
@@ -252,57 +284,108 @@
         </div>
     </div>
 
+    <!-- LOGBOOK & SUMMARY TAB -->
     <div id="logbook-page" class="page">
-        <div class="quick-add-container">
-            <div class="quick-btn" onclick="openForm('fuel-form')">⛽ ADD REFUEL</div>
-            <div class="quick-btn" onclick="openForm('expense-form')">🛒 ADD EXPENSE</div>
+        
+        <!-- MERGED INLINE FORM CARD -->
+        <div class="inline-form-card">
+            <h3>Quick Record Transaction</h3>
+            <form id="unifiedLogForm" onsubmit="handleUnifiedSubmit(event)">
+                <div class="form-row-grid">
+                    <div class="form-field-box">
+                        <label>Log Type</label>
+                        <select id="log-type" onchange="toggleFormFields(this.value)">
+                            <option value="Expense_Log">🛒 General Expense</option>
+                            <option value="Refuel_Log">⛽ Fuel Refuel</option>
+                        </select>
+                    </div>
+                    <div class="form-field-box">
+                        <label>Date</label>
+                        <input type="date" id="log-date" class="auto-date" required>
+                    </div>
+                </div>
+
+                <!-- Fields matching General Expenses -->
+                <div id="section-expense-inputs">
+                    <div class="form-row-grid">
+                        <div class="form-field-box">
+                            <label>Item Description</label>
+                            <input type="text" id="exp-name" placeholder="e.g., Car Wash, Tunnel toll">
+                        </div>
+                        <div class="form-field-box">
+                            <label>Category</label>
+                            <select id="exp-category">
+                                <option value="Food">Food</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Subscription">Subscription</option>
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fields matching Fuel Records -->
+                <div id="section-fuel-inputs" style="display: none;">
+                    <div class="form-row-grid">
+                        <div class="form-field-box">
+                            <label>Volume (Litres)</label>
+                            <input type="number" step="0.01" id="fuel-litres" placeholder="0.00">
+                        </div>
+                        <div class="form-field-box">
+                            <label>Petrol Brand</label>
+                            <select id="fuel-station">
+                                <option value="Shell">Shell</option>
+                                <option value="Caltex">Caltex</option>
+                                <option value="Esso">Esso</option>
+                                <option value="Sinopec">Sinopec</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-field-box" style="margin-bottom: 12px;">
+                    <label>Total Value ($HKD)</label>
+                    <input type="number" step="0.1" id="log-amount-cost" placeholder="$0.0" required>
+                </div>
+
+                <button type="submit" class="unified-submit-btn">POST TO DATABASE</button>
+            </form>
         </div>
 
+        <!-- CALENDAR VIEW -->
         <div class="calendar-box">
             <h3 id="calendar-month-year">Month Year</h3>
             <div class="calendar-grid" id="calendar-grid-days"></div>
         </div>
 
+        <!-- DAY DETAIL INSPECTOR PANEL -->
+        <div class="inspector-card" id="inspector-card" style="display: none;">
+            <div class="inspector-title">
+                <span id="inspector-date-label">Selected Date</span>
+                <span id="inspector-day-total" style="color: var(--primary-blue); font-weight: bold;">$0.0</span>
+            </div>
+            <div id="inspector-list-container"></div>
+        </div>
+
+        <!-- PIE CHART CARD SUMMARY -->
         <div class="chart-card">
-            <div class="chart-title">Spending Breakdown This Month</div>
+            <div class="chart-title">
+                <span>Monthly Overview Breakdown</span>
+                <span class="total-badge" id="chart-total-badge">$0.00</span>
+            </div>
             <div id="donut-container">
                 <canvas id="donutChart" width="100" height="100"></canvas>
             </div>
         </div>
     </div>
 
-    <div id="fuel-form" class="form-popup">
-        <div class="form-content">
-            <div class="form-header"><span>Log New Fuel</span><span class="close-form" onclick="closeForm('fuel-form')">✕</span></div>
-            <form id="refuelForm" onsubmit="submitForm(event, 'Refuel_Log')">
-                <div class="form-group"><label>Date</label><input type="date" class="auto-date" required></div>
-                <div class="form-group"><label>Litres (L)</label><input type="number" step="0.01" required id="fuel-litres"></div>
-                <div class="form-group"><label>Total Paid ($HKD)</label><input type="number" step="0.1" required id="fuel-cost"></div>
-                <div class="form-group"><label>Station</label><select id="fuel-station"><option value="Shell">Shell</option><option value="Caltex">Caltex</option><option value="Esso">Esso</option><option value="Sinopec">Sinopec</option></select></div>
-                <button type="submit" class="submit-btn">SAVE ENTRY</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="expense-form" class="form-popup">
-        <div class="form-content">
-            <div class="form-header"><span>Quick Expense Log</span><span class="close-form" onclick="closeForm('expense-form')">✕</span></div>
-            <form id="expenseForm" onsubmit="submitForm(event, 'Expense_Log')">
-                <div class="form-group"><label>Date</label><input type="date" class="auto-date" required></div>
-                <div class="form-group"><label>Amount ($HKD)</label><input type="number" step="0.1" required id="exp-amount"></div>
-                <div class="form-group"><label>Item Name</label><input type="text" required id="exp-name"></div>
-                <div class="form-group"><label>Category</label><select id="exp-category"><option value="Fuel">Fuel</option><option value="Food">Food</option><option value="Shopping">Shopping</option><option value="Subscription">Subscription</option><option value="Misc">Misc</option></select></div>
-                <button type="submit" class="submit-btn">ADD ENTRY</button>
-            </form>
-        </div>
-    </div>
-
     <script>
-        // CONFIGURATION: Insert your exact Google Apps Script Web App URL here
+        // CONFIGURATION: Database Apps Script Endpoint Connection
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVEkOqz67hUWG6-ZndWiNS9OMCm_xDoyL5tsynVHdrAyYdlt_WNVY_g_O1aHpZk3KqLw/exec';
         
         let userRecords = { refuels: [], expenses: [] };
         let donutChartInstance = null;
+        let selectedDayInteger = null;
 
         function switchTab(pageId, tabElement) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -311,8 +394,15 @@
             tabElement.classList.add('active');
         }
 
-        function openForm(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeForm(id) { document.getElementById(id).style.display = 'none'; }
+        function toggleFormFields(selectedType) {
+            if(selectedType === 'Refuel_Log') {
+                document.getElementById('section-expense-inputs').style.display = 'none';
+                document.getElementById('section-fuel-inputs').style.display = 'block';
+            } else {
+                document.getElementById('section-expense-inputs').style.display = 'block';
+                document.getElementById('section-fuel-inputs').style.display = 'none';
+            }
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
             const today = new Date();
@@ -331,6 +421,9 @@
             .then(data => {
                 userRecords = data;
                 processAndRenderData();
+                if(selectedDayInteger) {
+                    inspectSpecificDay(selectedDayInteger);
+                }
             })
             .catch(err => {
                 console.error("Error connecting to sheet backend:", err);
@@ -339,13 +432,42 @@
             });
         }
 
+        function handleUnifiedSubmit(event) {
+            event.preventDefault();
+            const targetSheetName = document.getElementById('log-type').value;
+            const dateValue = document.getElementById('log-date').value;
+            const totalValue = document.getElementById('log-amount-cost').value;
+            let rowData = [];
+
+            if (targetSheetName === 'Refuel_Log') {
+                rowData = [dateValue, document.getElementById('fuel-litres').value || '0', totalValue, document.getElementById('fuel-station').value];
+            } else {
+                rowData = [dateValue, totalValue, document.getElementById('exp-name').value || 'Item', document.getElementById('exp-category').value];
+            }
+
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ targetSheet: targetSheetName, rowData: rowData })
+            })
+            .then(() => {
+                alert('Success! Transaction written to database.');
+                document.getElementById('exp-name').value = '';
+                document.getElementById('fuel-litres').value = '';
+                document.getElementById('log-amount-cost').value = '';
+                fetchAllDataFromSheets();
+            })
+            .catch(err => alert('Error sending entry trace: ' + err));
+        }
+
         function processAndRenderData() {
             const today = new Date();
             const currentMonth = today.getMonth();
             const currentYear = today.getFullYear();
 
             let fuelDays = {}, expDays = {};
-            let categoryTotals = { Fuel: 0, Food: 0, Shopping: 0, Subscription: 0, Misc: 0 };
+            let categoryTotals = { Fuel: 0, Food: 0, Shopping: 0, Subscription: 0, Others: 0 };
             let hasCurrentMonthData = false;
 
             if (userRecords.refuels && Array.isArray(userRecords.refuels)) {
@@ -366,9 +488,14 @@
                     let d = new Date(item.date.replace(/-/g, '/'));
                     if(!isNaN(d.getTime()) && d.getMonth() === currentMonth && d.getFullYear() === currentYear) {
                         expDays[d.getDate()] = true;
-                        let cat = item.category || 'Misc';
+                        // Map "Misc" to "Others" smoothly if found in sheet
+                        let cat = item.category || 'Others';
+                        if (cat === 'Misc') cat = 'Others';
+                        
                         if(categoryTotals[cat] !== undefined) {
                             categoryTotals[cat] += parseFloat(item.amount || 0);
+                        } else {
+                            categoryTotals.Others += parseFloat(item.amount || 0);
                         }
                         hasCurrentMonthData = true;
                     }
@@ -391,7 +518,7 @@
             const firstDayIndex = new Date(dateObj.getFullYear(), dateObj.getMonth(), 1).getDay();
             const totalDays = new Date(dateObj.getFullYear(), dateObj.getMonth() + 1, 0).getDate();
 
-            for(let i=0; i<firstDayIndex; i++) { grid.innerHTML += `<div class="cal-day" style="background:none"></div>`; }
+            for(let i=0; i<firstDayIndex; i++) { grid.innerHTML += `<div class="cal-day" style="background:none; cursor:default"></div>`; }
             
             for(let day=1; day<=totalDays; day++) {
                 let statusClass = "";
@@ -399,60 +526,112 @@
                 else if(fuelDays[day]) statusClass = "has-fuel";
                 else if(expDays[day]) statusClass = "has-exp";
                 
-                grid.innerHTML += `<div class="cal-day ${statusClass}">${day}</div>`;
+                let selectFocusClass = (selectedDayInteger === day) ? 'selected-date-focus' : '';
+                
+                grid.innerHTML += `<div class="cal-day ${statusClass} ${selectFocusClass}" onclick="inspectSpecificDay(${day})">${day}</div>`;
+            }
+        }
+
+        function inspectSpecificDay(dayNumber) {
+            selectedDayInteger = dayNumber;
+            
+            // Toggle highlight ring indicators inside calendar cells
+            document.querySelectorAll('.cal-day').forEach(el => el.classList.remove('selected-date-focus'));
+            event?.currentTarget?.classList.add('selected-date-focus');
+
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+            
+            const inspectorBox = document.getElementById('inspector-card');
+            const listContainer = document.getElementById('inspector-list-container');
+            const dateLabel = document.getElementById('inspector-date-label');
+            const totalLabel = document.getElementById('inspector-day-total');
+
+            dateLabel.innerText = `${today.getFullYear()}-${String(currentMonth + 1).padStart(2, '0')}-${String(dayNumber).padStart(2, '0')}`;
+            listContainer.innerHTML = '';
+            
+            let dailyTotalSum = 0;
+            let transactionLines = [];
+
+            // Match fuel rows for this specific day number
+            if (userRecords.refuels && Array.isArray(userRecords.refuels)) {
+                userRecords.refuels.forEach(item => {
+                    if (!item.date) return;
+                    let d = new Date(item.date.replace(/-/g, '/'));
+                    if(!isNaN(d.getTime()) && d.getDate() === dayNumber && d.getMonth() === currentMonth && d.getFullYear() === currentYear) {
+                        let cost = parseFloat(item.total || 0);
+                        dailyTotalSum += cost;
+                        transactionLines.push(`<div class="inspector-item"><span>⛽ Fuel (${item.station || 'Station'}) - ${item.litres || 0}L</span><strong>$${cost.toFixed(1)}</strong></div>`);
+                    }
+                });
+            }
+
+            // Match generic expense rows for this specific day number
+            if (userRecords.expenses && Array.isArray(userRecords.expenses)) {
+                userRecords.expenses.forEach(item => {
+                    if (!item.date) return;
+                    let d = new Date(item.date.replace(/-/g, '/'));
+                    if(!isNaN(d.getTime()) && d.getDate() === dayNumber && d.getMonth() === currentMonth && d.getFullYear() === currentYear) {
+                        let cost = parseFloat(item.amount || 0);
+                        dailyTotalSum += cost;
+                        let categoryText = item.category === 'Misc' ? 'Others' : (item.category || 'Others');
+                        transactionLines.push(`<div class="inspector-item"><span>🛒 ${item.item || 'Item'} (${categoryText})</span><strong>$${cost.toFixed(1)}</strong></div>`);
+                    }
+                });
+            }
+
+            totalLabel.innerText = `$${dailyTotalSum.toFixed(1)}`;
+            inspectorBox.style.display = 'block';
+
+            if (transactionLines.length === 0) {
+                listContainer.innerHTML = '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:5px 0;">No logs recorded on this calendar day.</div>';
+            } else {
+                transactionLines.forEach(line => listContainer.innerHTML += line);
             }
         }
 
         function renderCharts(totals, hasData) {
             if(donutChartInstance) { donutChartInstance.destroy(); }
             const container = document.getElementById('donut-container');
+            const topBadge = document.getElementById('chart-total-badge');
             
-            if(!hasData) {
+            const grossSum = totals.Fuel + totals.Food + totals.Shopping + totals.Subscription + totals.Others;
+            topBadge.innerText = `$${grossSum.toFixed(2)}`;
+
+            if(!hasData || grossSum === 0) {
                 container.innerHTML = '<div class="no-data-msg">No logs recorded yet for this month. Your breakdown chart will show up here as soon as you add data!</div>';
                 return;
             }
 
             container.innerHTML = '<canvas id="donutChart" width="100" height="100"></canvas>';
             
+            const rawDataArray = [totals.Fuel, totals.Food, totals.Shopping, totals.Subscription, totals.Others];
+            
             donutChartInstance = new Chart(document.getElementById('donutChart'), {
-                type: 'doughnut',
+                type: 'pie', // Swapped to Pie chart layout
                 data: {
-                    labels: ['Fuel', 'Food', 'Shopping', 'Sub', 'Misc'],
+                    labels: ['Fuel', 'Food', 'Shopping', 'Sub', 'Others'],
                     datasets: [{
-                        data: [totals.Fuel, totals.Food, totals.Shopping, totals.Subscription, totals.Misc],
+                        data: rawDataArray,
                         backgroundColor: ['#0066b2', '#2e7d32', '#f57c00', '#7b1fa2', '#666666']
                     }]
                 },
-                options: { responsive: true }
+                options: { 
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let val = context.raw || 0;
+                                    let percentage = ((val / grossSum) * 100).toFixed(1);
+                                    return ` ${context.label}: $${val.toFixed(1)} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
             });
-        }
-
-        function submitForm(event, targetSheetName) {
-            event.preventDefault();
-            const form = event.target;
-            const dateValue = form.querySelector('.auto-date').value;
-            let rowData = [];
-
-            if (targetSheetName === 'Refuel_Log') {
-                rowData = [dateValue, document.getElementById('fuel-litres').value, document.getElementById('fuel-cost').value, document.getElementById('fuel-station').value];
-            } else {
-                rowData = [dateValue, document.getElementById('exp-amount').value, document.getElementById('exp-name').value, document.getElementById('exp-category').value];
-            }
-
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ targetSheet: targetSheetName, rowData: rowData })
-            })
-            .then(() => {
-                alert('Success! Logged to Google Sheets.');
-                form.reset();
-                form.querySelector('.auto-date').value = new Date().toISOString().split('T')[0];
-                closeForm(targetSheetName === 'Refuel_Log' ? 'fuel-form' : 'expense-form');
-                fetchAllDataFromSheets();
-            })
-            .catch(err => alert('Error sending to sheet: ' + err));
         }
     </script>
 </body>
