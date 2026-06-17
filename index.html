@@ -31,51 +31,69 @@
 
         header {
             background-color: var(--card-white);
-            position: sticky;
-            top: 0;
-            z-index: 100;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 15px 20px;
+            margin-bottom: 15px;
         }
 
         .header-title {
-            padding: 15px 20px 5px 20px;
             font-size: 22px;
             font-weight: bold;
+            color: var(--text-dark);
         }
 
-        .tabs {
-            display: flex;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .tab {
-            flex: 1;
-            text-align: center;
-            padding: 12px 0;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-muted);
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-        }
-
-        .tab.active {
-            color: var(--primary-blue);
-            border-bottom-color: var(--primary-blue);
-        }
-
-        .page {
-            display: none;
-            padding: 15px;
+        .page-container {
+            padding: 0 15px;
             max-width: 500px;
             margin: 0 auto;
         }
 
-        .page.active {
-            display: block;
+        /* Portal Quick Links Card */
+        .portal-card {
+            background: var(--card-white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        
+        .portal-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 12px;
         }
 
-        /* Inline Integrated Form Layout */
+        .portal-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .portal-link-btn {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .portal-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .portal-secondary {
+            background: #e3f2fd;
+            color: var(--primary-blue);
+        }
+
+        /* Form Layout */
         .inline-form-card {
             background: var(--card-white);
             border: 1px solid var(--border-color);
@@ -120,12 +138,6 @@
             background: #fafafa;
         }
 
-        .form-field-box input:focus, .form-field-box select:focus {
-            background: #ffffff;
-            border-color: var(--primary-blue);
-            outline: none;
-        }
-
         .unified-submit-btn {
             background: var(--primary-blue);
             color: white;
@@ -137,14 +149,9 @@
             font-weight: bold;
             cursor: pointer;
             margin-top: 5px;
-            transition: background 0.2s;
         }
 
-        .unified-submit-btn:active {
-            background: #005292;
-        }
-
-        /* Calendar Box Elements */
+        /* Calendar */
         .calendar-box {
             background: var(--card-white);
             border: 1px solid var(--border-color);
@@ -168,25 +175,15 @@
             border-radius: 6px;
             background: #f9f9f9;
             cursor: pointer;
-            user-select: none;
-            transition: transform 0.1s;
-        }
-
-        .cal-day:not(.cal-header):active {
-            transform: scale(0.92);
         }
 
         .cal-header { font-weight: bold; background: none; cursor: default; }
         .has-fuel { background: #e3f2fd; border-bottom: 3px solid var(--primary-blue); font-weight: bold; }
         .has-exp { background: #e8f5e9; border-bottom: 3px solid #2e7d32; font-weight: bold; }
         .has-both { background: #fff3e0; border-bottom: 3px solid #f57c00; font-weight: bold; }
-        
-        .cal-day.selected-date-focus {
-            outline: 2px solid #333333;
-            outline-offset: -1px;
-        }
+        .cal-day.selected-date-focus { outline: 2px solid #333333; outline-offset: -1px; }
 
-        /* Day Detail Inspector Box */
+        /* Day Details */
         .inspector-card {
             background: #ffffff;
             border: 1px solid var(--border-color);
@@ -211,17 +208,15 @@
             justify-content: space-between;
             font-size: 13px;
             padding: 6px 0;
-            border-bottom: 1px dashed #f5f5f5;
         }
-        .inspector-item:last-child { border: none; }
 
-        /* Chart Components */
+        /* Chart */
         .chart-card {
             background: var(--card-white);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
         .chart-title {
@@ -245,49 +240,51 @@
             padding: 20px 0;
             font-size: 14px;
         }
+
+        /* Dynamic Mileage Tracker Utility CSS */
+        .utility-card {
+            background: #fffde7;
+            border: 1px solid #fff59d;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+        }
+        .util-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .util-res-box {
+            background: #ffffff;
+            border: 1px solid #fff59d;
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="header-title">FuelLog HK</div>
-        <div class="tabs">
-            <div class="tab active" onclick="switchTab('prices-page', this)">PRICES</div>
-            <div class="tab" onclick="switchTab('logbook-page', this)">LOGBOOK & SUMMARY</div>
-        </div>
+        <div class="header-title">FuelLog & Expense Ledger</div>
     </header>
 
-    <!-- PRICES TAB -->
-    <div id="prices-page" class="page active">
-        <div style="background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 10px;">
-            <div style="font-size: 40px; margin-bottom: 10px;">⛽</div>
-            <h3 style="font-size: 18px; margin-bottom: 8px; color: var(--text-dark);">Live HK Fuel Price Portals</h3>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;">
-                Due to public security firewalls, live prices must be viewed via the official consumer data feeds. Tap below to check current net costs, promotions, or use the calculator tools.
-            </p>
-            
-            <a href="https://oil-price.consumer.org.hk/en" target="_blank" style="display: block; background: var(--primary-blue); color: white; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; margin-bottom: 10px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,102,178,0.2);">
-                📊 View Price Comparison Grid ↗
-            </a>
-            
-            <a href="https://oil-price.consumer.org.hk/en/calculator" target="_blank" style="display: block; background: #e3f2fd; color: var(--primary-blue); text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; margin-bottom: 15px; font-size: 14px;">
-                🧮 Open Fuel Discount Calculator ↗
-            </a>
-            
-            <span class="source-link" style="margin: 0; padding-top: 5px; border-top: 1px solid #eeeeee;">
-                Source Verified: Consumer Council Hong Kong
-            </span>
-        </div>
+    <div class="page-container">
 
-        <div style="margin-top: 15px; background: #fff3e0; border-left: 4px solid #f57c00; padding: 12px; border-radius: 4px; font-size: 12px; color: #e65100; line-height: 1.4;">
-            <strong>Pro Tip:</strong> Check the calculator tool before refuel trips to cross-reference credit card and member special promo updates instantly.
+        <div class="portal-card">
+            <div class="portal-header">⛽ <span>Consumer Council Fuel Portals</span></div>
+            <div class="portal-grid">
+                <a href="https://oil-price.consumer.org.hk/en" target="_blank" class="portal-link-btn portal-primary">
+                    📊 Compare Prices ↗
+                </a>
+                <a href="https://oil-price.consumer.org.hk/en/calculator" target="_blank" class="portal-link-btn portal-secondary">
+                    🧮 Calculator Tool ↗
+                </a>
+            </div>
         </div>
-    </div>
-
-    <!-- LOGBOOK & SUMMARY TAB -->
-    <div id="logbook-page" class="page">
         
-        <!-- MERGED INLINE FORM CARD -->
         <div class="inline-form-card">
             <h3>Quick Record Transaction</h3>
             <form id="unifiedLogForm" onsubmit="handleUnifiedSubmit(event)">
@@ -305,12 +302,11 @@
                     </div>
                 </div>
 
-                <!-- Fields matching General Expenses -->
                 <div id="section-expense-inputs">
                     <div class="form-row-grid">
                         <div class="form-field-box">
                             <label>Item Description</label>
-                            <input type="text" id="exp-name" placeholder="e.g., Car Wash, Tunnel toll">
+                            <input type="text" id="exp-name" placeholder="e.g., Tunnel toll, Parking">
                         </div>
                         <div class="form-field-box">
                             <label>Category</label>
@@ -324,7 +320,6 @@
                     </div>
                 </div>
 
-                <!-- Fields matching Fuel Records -->
                 <div id="section-fuel-inputs" style="display: none;">
                     <div class="form-row-grid">
                         <div class="form-field-box">
@@ -332,7 +327,7 @@
                             <input type="number" step="0.01" id="fuel-litres" placeholder="0.00">
                         </div>
                         <div class="form-field-box">
-                            <label>Petrol Brand</label>
+                            <label>Company Brand</label>
                             <select id="fuel-station">
                                 <option value="Shell">Shell</option>
                                 <option value="Caltex">Caltex</option>
@@ -352,13 +347,11 @@
             </form>
         </div>
 
-        <!-- CALENDAR VIEW -->
         <div class="calendar-box">
             <h3 id="calendar-month-year">Month Year</h3>
             <div class="calendar-grid" id="calendar-grid-days"></div>
         </div>
 
-        <!-- DAY DETAIL INSPECTOR PANEL -->
         <div class="inspector-card" id="inspector-card" style="display: none;">
             <div class="inspector-title">
                 <span id="inspector-date-label">Selected Date</span>
@@ -367,7 +360,6 @@
             <div id="inspector-list-container"></div>
         </div>
 
-        <!-- PIE CHART CARD SUMMARY -->
         <div class="chart-card">
             <div class="chart-title">
                 <span>Monthly Overview Breakdown</span>
@@ -377,22 +369,37 @@
                 <canvas id="donutChart" width="100" height="100"></canvas>
             </div>
         </div>
+
+        <div class="utility-card">
+            <h4 style="font-size: 14px; font-weight: bold; color: #5d4037;">⛽ Quick Efficiency Calculator</h4>
+            <div class="form-row-grid" style="margin-top:8px; margin-bottom:8px;">
+                <div class="form-field-box">
+                    <label style="color:#5d4037;">Distance Driven (km)</label>
+                    <input type="number" id="calc-km" placeholder="e.g., 450" oninput="calculateTripEfficiency()">
+                </div>
+                <div class="form-field-box">
+                    <label style="color:#5d4037;">Cost of Refuel ($)</label>
+                    <input type="number" id="calc-cost" placeholder="e.g., 800" oninput="calculateTripEfficiency()">
+                </div>
+            </div>
+            <div class="form-field-box" style="margin-bottom: 10px;">
+                <label style="color:#5d4037;">Litres Filled (L)</label>
+                <input type="number" step="0.01" id="calc-litres" placeholder="e.g., 38.5" oninput="calculateTripEfficiency()">
+            </div>
+            <div class="util-grid">
+                <div class="util-res-box">Cost: <strong id="res-cost-per-km" style="color:var(--primary-blue)">$0.00</strong> /km</div>
+                <div class="util-res-box">Consumption: <strong id="res-km-per-litre" style="color:#2e7d32">0.0</strong> km/L</div>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // CONFIGURATION: Database Apps Script Endpoint Connection
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVEkOqz67hUWG6-ZndWiNS9OMCm_xDoyL5tsynVHdrAyYdlt_WNVY_g_O1aHpZk3KqLw/exec';
         
         let userRecords = { refuels: [], expenses: [] };
         let donutChartInstance = null;
         let selectedDayInteger = null;
-
-        function switchTab(pageId, tabElement) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            tabElement.classList.add('active');
-        }
 
         function toggleFormFields(selectedType) {
             if(selectedType === 'Refuel_Log') {
@@ -421,12 +428,10 @@
             .then(data => {
                 userRecords = data;
                 processAndRenderData();
-                if(selectedDayInteger) {
-                    inspectSpecificDay(selectedDayInteger);
-                }
+                if(selectedDayInteger) inspectSpecificDay(selectedDayInteger);
             })
             .catch(err => {
-                console.error("Error connecting to sheet backend:", err);
+                console.error("Error linking system database:", err);
                 const gridDays = document.getElementById('calendar-grid-days');
                 if (gridDays) gridDays.innerHTML = '<div class="no-data-msg">Error loading database components.</div>';
             });
@@ -452,13 +457,13 @@
                 body: JSON.stringify({ targetSheet: targetSheetName, rowData: rowData })
             })
             .then(() => {
-                alert('Success! Transaction written to database.');
+                alert('Success! Saved to Google Sheets.');
                 document.getElementById('exp-name').value = '';
                 document.getElementById('fuel-litres').value = '';
                 document.getElementById('log-amount-cost').value = '';
                 fetchAllDataFromSheets();
             })
-            .catch(err => alert('Error sending entry trace: ' + err));
+            .catch(err => alert('Error sending record log: ' + err));
         }
 
         function processAndRenderData() {
@@ -488,7 +493,6 @@
                     let d = new Date(item.date.replace(/-/g, '/'));
                     if(!isNaN(d.getTime()) && d.getMonth() === currentMonth && d.getFullYear() === currentYear) {
                         expDays[d.getDate()] = true;
-                        // Map "Misc" to "Others" smoothly if found in sheet
                         let cat = item.category || 'Others';
                         if (cat === 'Misc') cat = 'Others';
                         
@@ -527,18 +531,14 @@
                 else if(expDays[day]) statusClass = "has-exp";
                 
                 let selectFocusClass = (selectedDayInteger === day) ? 'selected-date-focus' : '';
-                
                 grid.innerHTML += `<div class="cal-day ${statusClass} ${selectFocusClass}" onclick="inspectSpecificDay(${day})">${day}</div>`;
             }
         }
 
         function inspectSpecificDay(dayNumber) {
             selectedDayInteger = dayNumber;
-            
-            // Toggle highlight ring indicators inside calendar cells
             document.querySelectorAll('.cal-day').forEach(el => el.classList.remove('selected-date-focus'));
-            event?.currentTarget?.classList.add('selected-date-focus');
-
+            
             const today = new Date();
             const currentMonth = today.getMonth();
             const currentYear = today.getFullYear();
@@ -554,7 +554,6 @@
             let dailyTotalSum = 0;
             let transactionLines = [];
 
-            // Match fuel rows for this specific day number
             if (userRecords.refuels && Array.isArray(userRecords.refuels)) {
                 userRecords.refuels.forEach(item => {
                     if (!item.date) return;
@@ -567,7 +566,6 @@
                 });
             }
 
-            // Match generic expense rows for this specific day number
             if (userRecords.expenses && Array.isArray(userRecords.expenses)) {
                 userRecords.expenses.forEach(item => {
                     if (!item.date) return;
@@ -585,14 +583,14 @@
             inspectorBox.style.display = 'block';
 
             if (transactionLines.length === 0) {
-                listContainer.innerHTML = '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:5px 0;">No logs recorded on this calendar day.</div>';
+                listContainer.innerHTML = '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:5px 0;">No entries recorded on this calendar date.</div>';
             } else {
                 transactionLines.forEach(line => listContainer.innerHTML += line);
             }
         }
 
         function renderCharts(totals, hasData) {
-            if(donutChartInstance) { donutChartInstance.destroy(); }
+            if(donutChartInstance) donutChartInstance.destroy();
             const container = document.getElementById('donut-container');
             const topBadge = document.getElementById('chart-total-badge');
             
@@ -600,20 +598,18 @@
             topBadge.innerText = `$${grossSum.toFixed(2)}`;
 
             if(!hasData || grossSum === 0) {
-                container.innerHTML = '<div class="no-data-msg">No logs recorded yet for this month. Your breakdown chart will show up here as soon as you add data!</div>';
+                container.innerHTML = '<div class="no-data-msg">No logs recorded yet for this month.</div>';
                 return;
             }
 
             container.innerHTML = '<canvas id="donutChart" width="100" height="100"></canvas>';
             
-            const rawDataArray = [totals.Fuel, totals.Food, totals.Shopping, totals.Subscription, totals.Others];
-            
             donutChartInstance = new Chart(document.getElementById('donutChart'), {
-                type: 'pie', // Swapped to Pie chart layout
+                type: 'pie',
                 data: {
                     labels: ['Fuel', 'Food', 'Shopping', 'Sub', 'Others'],
                     datasets: [{
-                        data: rawDataArray,
+                        data: [totals.Fuel, totals.Food, totals.Shopping, totals.Subscription, totals.Others],
                         backgroundColor: ['#0066b2', '#2e7d32', '#f57c00', '#7b1fa2', '#666666']
                     }]
                 },
@@ -632,6 +628,28 @@
                     }
                 }
             });
+        }
+
+        // MILEAGE ECONOMY METRIC HANDLER LOGIC
+        function calculateTripEfficiency() {
+            const km = parseFloat(document.getElementById('calc-km').value);
+            const cost = parseFloat(document.getElementById('calc-cost').value);
+            const litres = parseFloat(document.getElementById('calc-litres').value);
+
+            const costPerKmEl = document.getElementById('res-cost-per-km');
+            const kmPerLitreEl = document.getElementById('res-km-per-litre');
+
+            if(km > 0 && cost > 0) {
+                costPerKmEl.innerText = `$${(cost / km).toFixed(2)}`;
+            } else {
+                costPerKmEl.innerText = '$0.00';
+            }
+
+            if(km > 0 && litres > 0) {
+                kmPerLitreEl.innerText = `${(km / litres).toFixed(1)}`;
+            } else {
+                kmPerLitreEl.innerText = '0.0';
+            }
         }
     </script>
 </body>
