@@ -380,29 +380,67 @@
         }
 
         function renderLivePrices(priceData) {
-            const standardContainer = document.getElementById('standard-petrol-container');
-            const premiumContainer = document.getElementById('premium-petrol-container');
-            
-            standardContainer.innerHTML = '';
-            premiumContainer.innerHTML = '';
+    const standardContainer = document.getElementById('standard-petrol-container');
+    const premiumContainer = document.getElementById('premium-petrol-container');
+    
+    standardContainer.innerHTML = '';
+    premiumContainer.innerHTML = '';
 
-            priceData.forEach(oilCompany => {
-                const companyName = oilCompany.company_name_en.toUpperCase();
-                
-                if (oilCompany.unleaded) {
-                    const pump = parseFloat(oilCompany.unleaded.pump_price).toFixed(2);
-                    const discount = parseFloat(oilCompany.unleaded.walkin_discount || 0).toFixed(2);
-                    const net = (pump - discount).toFixed(2);
-                    standardContainer.innerHTML += createPriceCard(companyName, pump, net, discount);
-                }
+    if (!priceData) {
+        standardContainer.innerHTML = '<div class="no-data-msg">No pricing data returned from backend.</div>';
+        premiumContainer.innerHTML = '<div class="no-data-msg">No pricing data returned from backend.</div>';
+        return;
+    }
 
-                if (oilCompany.premium_unleaded) {
-                    const pump = parseFloat(oilCompany.premium_unleaded.pump_price).toFixed(2);
-                    const discount = parseFloat(oilCompany.premium_unleaded.walkin_discount || 0).toFixed(2);
-                    const net = (pump - discount).toFixed(2);
-                    premiumContainer.innerHTML += createPriceCard(companyName + " PREMIUM", pump, net, discount);
-                }
-            });
+    // Unify data formatting structures from different API mirrors
+    let oilCompanies = [];
+    if (Array.isArray(priceData)) {
+        oilCompanies = priceData;
+    } else if (priceData.oil_prices) {
+        oilCompanies = priceData.oil_prices;
+    } else if (priceData.prices) {
+        oilCompanies = priceData.prices;
+    } else if (priceData.data && Array.isArray(priceData.data)) {
+        oilCompanies = priceData.data;
+    }
+
+    if (oilCompanies.length === 0) {
+        standardContainer.innerHTML = '<div class="no-data-msg">Price feed formatting structure mismatch.</div>';
+        premiumContainer.innerHTML = '<div class="no-data-msg">Price feed formatting structure mismatch.</div>';
+        return;
+    }
+
+    oilCompanies.forEach(oilCompany => {
+        // Safe variable check for English and Chinese company titles
+        const companyName = (oilCompany.company_name_en || oilCompany.company || oilCompany.brand || 'Oil Co').toUpperCase();
+        
+        // Target Standard Petrol fields safely
+        const standardData = oilCompany.unleaded || oilCompany.unleaded_petrol || oilCompany.standard;
+        if (standardData) {
+            const pump = parseFloat(standardData.pump_price || standardData.price || 0).toFixed(2);
+            const discount = parseFloat(standardData.walkin_discount || standardData.discount || 0).toFixed(2);
+            const net = (pump - discount).toFixed(2);
+            standardContainer.innerHTML += createPriceCard(companyName, pump, net, discount);
+        }
+
+        // Target Premium Petrol fields safely
+        const premiumData = oilCompany.premium_unleaded || oilCompany.premium || oilCompany.super;
+        if (premiumData) {
+            const pump = parseFloat(premiumData.pump_price || premiumData.price || 0).toFixed(2);
+            const discount = parseFloat(premiumData.walkin_discount || premiumData.discount || 0).toFixed(2);
+            const net = (pump - discount).toFixed(2);
+            premiumContainer.innerHTML += createPriceCard(companyName + " PREMIUM", pump, net, discount);
+        }
+    });
+
+    // Final safety check if items were skipped during parsing loops
+    if (standardContainer.innerHTML === '') {
+        standardContainer.innerHTML = '<div class="no-data-msg">No standard petrol items extracted.</div>';
+    }
+    if (premiumContainer.innerHTML === '') {
+        premiumContainer.innerHTML = '<div class="no-data-msg">No premium petrol items extracted.</div>';
+    }
+}
         }
 
         function createPriceCard(name, pump, net, discount) {
