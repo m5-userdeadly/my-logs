@@ -82,51 +82,6 @@
             display: block;
         }
 
-        .section-title {
-            background-color: var(--primary-blue);
-            color: white;
-            padding: 8px 12px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 6px 6px 0 0;
-            margin-top: 15px;
-        }
-
-        .merchant-card {
-            background: var(--card-white);
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-top: none;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .merchant-card:last-of-type {
-            border-radius: 0 0 6px 6px;
-            margin-bottom: 15px;
-        }
-
-        .merchant-name {
-            font-weight: bold;
-            font-size: 16px;
-        }
-
-        .price-info {
-            text-align: right;
-        }
-
-        .price-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-left: 10px;
-        }
-
-        .price-values {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
         .quick-add-container {
             display: flex;
             gap: 10px;
@@ -272,16 +227,28 @@
     </header>
 
     <div id="prices-page" class="page active">
-        <span class="source-link">Source: Consumer Council HK (Live API Feed via Sheets)</span>
-        
-        <div class="section-title">STANDARD PETROL</div>
-        <div id="standard-petrol-container">
-            <div class="no-data-msg">Fetching live prices...</div>
+        <div style="background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 10px;">
+            <div style="font-size: 40px; margin-bottom: 10px;">⛽</div>
+            <h3 style="font-size: 18px; margin-bottom: 8px; color: var(--text-dark);">Live HK Fuel Price Portals</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;">
+                Due to public security firewalls, live prices must be viewed via the official consumer data feeds. Tap below to check current net costs, promotions, or use the calculator tools.
+            </p>
+            
+            <a href="https://oil-price.consumer.org.hk/en" target="_blank" style="display: block; background: var(--primary-blue); color: white; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; margin-bottom: 10px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,102,178,0.2);">
+                📊 View Price Comparison Grid ↗
+            </a>
+            
+            <a href="https://oil-price.consumer.org.hk/en/calculator" target="_blank" style="display: block; background: #e3f2fd; color: var(--primary-blue); text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; margin-bottom: 15px; font-size: 14px;">
+                🧮 Open Fuel Discount Calculator ↗
+            </a>
+            
+            <span class="source-link" style="margin: 0; padding-top: 5px; border-top: 1px solid #eeeeee;">
+                Source Verified: Consumer Council Hong Kong
+            </span>
         </div>
 
-        <div class="section-title">PREMIUM PETROL</div>
-        <div id="premium-petrol-container">
-            <div class="no-data-msg">Fetching live prices...</div>
+        <div style="margin-top: 15px; background: #fff3e0; border-left: 4px solid #f57c00; padding: 12px; border-radius: 4px; font-size: 12px; color: #e65100; line-height: 1.4;">
+            <strong>Pro Tip:</strong> Check the calculator tool before refuel trips to cross-reference credit card and member special promo updates instantly.
         </div>
     </div>
 
@@ -324,14 +291,14 @@
                 <div class="form-group"><label>Date</label><input type="date" class="auto-date" required></div>
                 <div class="form-group"><label>Amount ($HKD)</label><input type="number" step="0.1" required id="exp-amount"></div>
                 <div class="form-group"><label>Item Name</label><input type="text" required id="exp-name"></div>
-                <div class="form-group"><label>Category</label><select id="exp-category"><option value="Food">Food</option><option value="Shopping">Shopping</option><option value="Subscription">Subscription</option><option value="Misc">Misc</option></select></div>
+                <div class="form-group"><label>Category</label><select id="exp-category"><option value="Fuel">Fuel</option><option value="Food">Food</option><option value="Shopping">Shopping</option><option value="Subscription">Subscription</option><option value="Misc">Misc</option></select></div>
                 <button type="submit" class="submit-btn">ADD ENTRY</button>
             </form>
         </div>
     </div>
 
     <script>
-// CONFIGURATION: Web App URL
+        // CONFIGURATION: Insert your exact Google Apps Script Web App URL here
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVEkOqz67hUWG6-ZndWiNS9OMCm_xDoyL5tsynVHdrAyYdlt_WNVY_g_O1aHpZk3KqLw/exec';
         
         let userRecords = { refuels: [], expenses: [] };
@@ -363,71 +330,13 @@
             .then(res => res.json())
             .then(data => {
                 userRecords = data;
-                
-                if (data.livePrices) {
-                    renderLivePrices(data.livePrices);
-                } else {
-                    document.querySelectorAll('.no-data-msg').forEach(el => el.innerText = "Petrol prices temporarily unavailable.");
-                }
-                
                 processAndRenderData();
             })
             .catch(err => {
                 console.error("Error connecting to sheet backend:", err);
-                document.querySelectorAll('.no-data-msg').forEach(el => el.innerText = "Error loading database components.");
+                const gridDays = document.getElementById('calendar-grid-days');
+                if (gridDays) gridDays.innerHTML = '<div class="no-data-msg">Error loading database components.</div>';
             });
-        }
-
-        function renderLivePrices(priceData) {
-            const standardContainer = document.getElementById('standard-petrol-container');
-            const premiumContainer = document.getElementById('premium-petrol-container');
-            
-            standardContainer.innerHTML = '';
-            premiumContainer.innerHTML = '';
-
-            let oilCompanies = [];
-            if (Array.isArray(priceData)) oilCompanies = priceData;
-            else if (priceData.oil_prices) oilCompanies = priceData.oil_prices;
-            else if (priceData.prices) oilCompanies = priceData.prices;
-
-            if (oilCompanies.length === 0) {
-                standardContainer.innerHTML = '<div class="no-data-msg">Price feed structural mismatch.</div>';
-                premiumContainer.innerHTML = '<div class="no-data-msg">Price feed structural mismatch.</div>';
-                return;
-            }
-
-            oilCompanies.forEach(oilCompany => {
-                const companyName = (oilCompany.company_name_en || oilCompany.company || 'Oil Co').toUpperCase();
-                
-                if (oilCompany.unleaded) {
-                    const pump = parseFloat(oilCompany.unleaded.pump_price || 0).toFixed(2);
-                    const discount = parseFloat(oilCompany.unleaded.walkin_discount || 0).toFixed(2);
-                    const net = (pump - discount).toFixed(2);
-                    standardContainer.innerHTML += createPriceCard(companyName, pump, net, discount);
-                }
-
-                if (oilCompany.premium_unleaded) {
-                    const pump = parseFloat(oilCompany.premium_unleaded.pump_price || 0).toFixed(2);
-                    const discount = parseFloat(oilCompany.premium_unleaded.walkin_discount || 0).toFixed(2);
-                    const net = (pump - discount).toFixed(2);
-                    premiumContainer.innerHTML += createPriceCard(companyName + " PREMIUM", pump, net, discount);
-                }
-            });
-        }
-
-        function createPriceCard(name, pump, net, discount) {
-            return `
-                <div class="merchant-card">
-                    <div class="merchant-name">${name}</div>
-                    <div class="price-info">
-                        <div>
-                            <span class="price-label">Pump</span>
-                            <span class="price-label" style="color:var(--primary-blue)">Net (-$${discount})</span>
-                        </div>
-                        <div class="price-values">$${pump} / <span style="color:var(--primary-blue)">$${net}</span></div>
-                    </div>
-                </div>
-            `;
         }
 
         function processAndRenderData() {
@@ -442,7 +351,7 @@
             if (userRecords.refuels && Array.isArray(userRecords.refuels)) {
                 userRecords.refuels.forEach(item => {
                     if (!item.date) return;
-                    let d = new Date(item.date.replace(/-/g, '/')); // Fix: Resilient date formatting strings
+                    let d = new Date(item.date.replace(/-/g, '/'));
                     if(!isNaN(d.getTime()) && d.getMonth() === currentMonth && d.getFullYear() === currentYear) {
                         fuelDays[d.getDate()] = true;
                         categoryTotals.Fuel += parseFloat(item.total || 0);
@@ -454,7 +363,7 @@
             if (userRecords.expenses && Array.isArray(userRecords.expenses)) {
                 userRecords.expenses.forEach(item => {
                     if (!item.date) return;
-                    let d = new Date(item.date.replace(/-/g, '/')); // Fix: Resilient date formatting strings
+                    let d = new Date(item.date.replace(/-/g, '/'));
                     if(!isNaN(d.getTime()) && d.getMonth() === currentMonth && d.getFullYear() === currentYear) {
                         expDays[d.getDate()] = true;
                         let cat = item.category || 'Misc';
